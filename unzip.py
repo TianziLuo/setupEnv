@@ -10,14 +10,14 @@ def unzip():
     # Set folder paths
     downloads_path = os.path.expanduser("~/Downloads")
     desktop_path = os.path.expanduser("~/Desktop")
-    final_folder_name = "SetUp"  # Final folder name
-    d_drive_target = r"C:\SetUp"  # Target path on D drive
+    final_folder_name = "downloadenv"  # Final folder name
+    d_drive_target = r"C:\downloadenv"  # Target path on D drive
 
     # Find .rar files starting with "uServePro"
-    files = [f for f in os.listdir(downloads_path) if f.startswith("download") and f.endswith(".zip")]
+    files = [f for f in os.listdir(downloads_path) if f.startswith("downloadenv") and f.endswith(".rar")]
 
     if not files:
-        print("zip file was't found!")
+        print("No .rar file starting with 'uServePro' was found!")
     else:
         print(f"File found: {files[0]}")
 
@@ -74,7 +74,6 @@ def unzip():
             print("Unable to read the .rar file. Please check if the file is corrupted or the path is correct!")
         except Exception as e:
             print(f"An error occurred during extraction or copying: {e}")
-
 
 
 if __name__ == "__main__":

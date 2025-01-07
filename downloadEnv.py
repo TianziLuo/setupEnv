@@ -28,12 +28,12 @@ driver = webdriver.Edge(options=edge_options)
 
 try:
     attempts = 0
-    max_attempts = 5
+    max_attempts = 3
 
     while attempts < max_attempts:
         try:
             # 打开网页
-            driver.get("https://drive.usercontent.google.com/download?id=1UjVxHYH6ZXnFRYP6TQ3uqmvDpAhL48mw&export=download&authuser=0")
+            driver.get("https://drive.usercontent.google.com/download?id=16vHcpsRPKuOv2a9GFXxQU6j4kR02g6EJ&export=download&authuser=0")
             break  # 如果成功打开网页，退出循环
         except Exception as e:
             print(f"尝试第 {attempts + 1} 次打开网页失败: {e}")
