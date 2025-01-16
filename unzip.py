@@ -1,38 +1,34 @@
 import os
 import shutil
-import rarfile
+import zipfile
 
 def unzip():
-    # Specify the path to unrar and rar executables
-    rarfile.UNRAR_TOOL = r"C:\Program Files\WinRAR\unrar.exe"
-    rarfile.RAR_TOOL = r"C:\Program Files\WinRAR\rar.exe"
-
     # Set folder paths
     downloads_path = os.path.expanduser("~/Downloads")
     desktop_path = os.path.expanduser("~/Desktop")
     final_folder_name = "downloadenv"  # Final folder name
     d_drive_target = r"C:\downloadenv"  # Target path on D drive
 
-    # Find .rar files starting with "uServePro"
-    files = [f for f in os.listdir(downloads_path) if f.startswith("downloadenv") and f.endswith(".rar")]
+    # Find .zip files starting with "downloadenv"
+    files = [f for f in os.listdir(downloads_path) if f.startswith("downloadenv") and f.endswith(".zip")]
 
     if not files:
-        print("No .rar file starting with 'uServePro' was found!")
+        print("No .zip file starting with 'downloadenv' was found!")
     else:
         print(f"File found: {files[0]}")
 
         try:
-            # Full path to the .rar file
-            rar_file = os.path.join(downloads_path, files[0])
+            # Full path to the .zip file
+            zip_file = os.path.join(downloads_path, files[0])
             
             # Temporary extraction directory
             temp_extract_dir = os.path.join(desktop_path, "temp_extracted")
             if not os.path.exists(temp_extract_dir):
                 os.makedirs(temp_extract_dir)
             
-            # Extract the .rar file
-            with rarfile.RarFile(rar_file, 'r') as rar_ref:
-                rar_ref.extractall(temp_extract_dir)
+            # Extract the .zip file
+            with zipfile.ZipFile(zip_file, 'r') as zip_ref:
+                zip_ref.extractall(temp_extract_dir)
             
             # Handle extracted content
             extracted_items = os.listdir(temp_extract_dir)
@@ -70,11 +66,10 @@ def unzip():
             shutil.rmtree(final_path)
             print(f"The folder on the Desktop has been deleted: {final_path}")
             
-        except rarfile.BadRarFile:
-            print("Unable to read the .rar file. Please check if the file is corrupted or the path is correct!")
+        except zipfile.BadZipFile:
+            print("Unable to read the .zip file. Please check if the file is corrupted or the path is correct!")
         except Exception as e:
             print(f"An error occurred during extraction or copying: {e}")
-
-
+            
 if __name__ == "__main__":
     unzip()
