@@ -70,6 +70,8 @@ def unzip():
             print("Unable to read the .zip file. Please check if the file is corrupted or the path is correct!")
         except Exception as e:
             print(f"An error occurred during extraction or copying: {e}")
-            
+
+ '''     
 if __name__ == "__main__":
     unzip()
+''' 
