@@ -1,3 +1,3 @@
-import download from downloadEnv
+from downloadEnv import download
 
 download()

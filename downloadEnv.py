@@ -7,6 +7,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.edge.options import Options
 
 def download():
+    isdownload = False
     # Configure download directory
     download_dir = os.path.join(os.getcwd(), "downloads")
     if not os.path.exists(download_dir):
@@ -48,7 +49,7 @@ def download():
                 for file in files:
                     if file.endswith(".tmp"):  # Check if the file is still downloading
                         print(f"File {file} is downloading...")
-                        time.sleep(20)
+                        time.sleep(200)
                     else:
                         # If the file is fully downloaded, break the loop
                         downloaded_file = os.path.join(download_dir, file)
@@ -58,7 +59,9 @@ def download():
                 break
 
         if downloaded:
+            isdownload = True
             print(f"File downloaded successfully: {downloaded_file}")
+            return isdownload
         else:
             print("File download timed out or failed!")
 

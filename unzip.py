@@ -2,7 +2,7 @@ import os
 import shutil
 import zipfile
 
-def unzip():
+def unzip(isdownload):
     # Set folder paths
     downloads_path = os.path.expanduser("~/Downloads")
     desktop_path = os.path.expanduser("~/Desktop")
@@ -71,7 +71,6 @@ def unzip():
         except Exception as e:
             print(f"An error occurred during extraction or copying: {e}")
 
- '''     
+ 
 if __name__ == "__main__":
-    unzip()
-''' 
+    unzip(isdownload)
