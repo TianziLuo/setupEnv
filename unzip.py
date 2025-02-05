@@ -2,15 +2,15 @@ import os
 import shutil
 import zipfile
 
-def unzip(isdownload):
-    # Set folder paths
-    downloads_path = os.path.expanduser("~/Downloads")
-    desktop_path = os.path.expanduser("~/Desktop")
+def unzip():
+
+    desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
+    downloadenv_folder = os.path.join(desktop_path, "downloadenv")
     final_folder_name = "downloadenv"  # Final folder name
     d_drive_target = r"C:\downloadenv"  # Target path on D drive
 
     # Find .zip files starting with "downloadenv"
-    files = [f for f in os.listdir(downloads_path) if f.startswith("downloadenv") and f.endswith(".zip")]
+    files = [f for f in os.listdir(downloadenv_folder) if f.startswith("downloadenv") and f.endswith(".zip")]
 
     if not files:
         print("No .zip file starting with 'downloadenv' was found!")
@@ -19,7 +19,7 @@ def unzip(isdownload):
 
         try:
             # Full path to the .zip file
-            zip_file = os.path.join(downloads_path, files[0])
+            zip_file = os.path.join(downloadenv_folder, files[0])
             
             # Temporary extraction directory
             temp_extract_dir = os.path.join(desktop_path, "temp_extracted")
@@ -51,7 +51,10 @@ def unzip(isdownload):
             
             # Cleanup temporary directory if it was not renamed
             if os.path.exists(temp_extract_dir):
-                os.rmdir(temp_extract_dir)
+                try:
+                    os.rmdir(temp_extract_dir)
+                except OSError as e:
+                    print(f"Failed to remove temp directory {temp_extract_dir}: {e}")
 
             # Handle the D drive target
             if os.path.exists(d_drive_target):
@@ -70,7 +73,8 @@ def unzip(isdownload):
             print("Unable to read the .zip file. Please check if the file is corrupted or the path is correct!")
         except Exception as e:
             print(f"An error occurred during extraction or copying: {e}")
-
- 
+            
+'''
 if __name__ == "__main__":
-    unzip(isdownload)
+    unzip()
+'''

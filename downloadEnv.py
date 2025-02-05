@@ -7,20 +7,22 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.edge.options import Options
 
 def download():
-    isdownload = False
     # Configure download directory
-    download_dir = os.path.join(os.getcwd(), "downloads")
-    if not os.path.exists(download_dir):
-        os.makedirs(download_dir)
+    file_name = "downloadenv"
+    downloads_path = os.path.expanduser("~/Downloads")
+    download_dir = os.path.join(downloads_path, file_name)
+
+    # Ensure the download directory exists
+    os.makedirs(download_dir, exist_ok=True)
 
     # Configure Edge Options
     edge_options = Options()
     prefs = {
-        "download.default_directory": download_dir,  # Set the default download directory
-        "profile.default_content_settings.popups": 0,  # Disable popups
-        "download.prompt_for_download": False,  # Disable the download prompt
-        "download.directory_upgrade": True,  # Enable directory upgrades
-        "safebrowsing.enabled": True,  # Enable safe browsing
+        "download.default_directory": download_dir,
+        "profile.default_content_settings.popups": 0,
+        "download.prompt_for_download": False,
+        "download.directory_upgrade": True,
+        "safebrowsing.enabled": True,
     }
     edge_options.add_experimental_option("prefs", prefs)
 
@@ -29,44 +31,42 @@ def download():
 
     try:
         # Open the webpage
-        driver.get("https://drive.usercontent.google.com/download?id=16vHcpsRPKuOv2a9GFXxQU6j4kR02g6EJ&export=download&authuser=0")
+        driver.get("https://drive.google.com/uc?export=download&id=16vHcpsRPKuOv2a9GFXxQU6j4kR02g6EJ")
 
-        # Wait for and click the download button
+        # Wait for the download button to appear
         wait = WebDriverWait(driver, 10)
-        element = wait.until(EC.element_to_be_clickable((By.ID, "uc-download-link")))
+        element = wait.until(EC.element_to_be_clickable((By.XPATH, "//a[contains(@href, 'export=download')]")))
         element.click()
-        print("Clicked the download button, waiting for file download...")
 
-        # Check the download directory
-        timeout = 30  # Timeout period (seconds)
+        # Monitor the download folder
+        timeout = 300  # Timeout period (seconds)
         start_time = time.time()
-        downloaded = False
+        downloaded_file = None
 
-        # Loop to check if the download has completed
         while time.time() - start_time < timeout:
             files = os.listdir(download_dir)
-            if files:
-                for file in files:
-                    if file.endswith(".tmp"):  # Check if the file is still downloading
-                        print(f"File {file} is downloading...")
-                        time.sleep(200)
-                    else:
-                        # If the file is fully downloaded, break the loop
-                        downloaded_file = os.path.join(download_dir, file)
-                        downloaded = True
-                        break
-            if downloaded:
-                break
+            for file in files:
+                file_path = os.path.join(download_dir, file)
+                if file.endswith(".crdownload") or file.endswith(".tmp"):  # Still downloading
+                    print(f"File {file} is still downloading...")
+                else:
+                    # File is fully downloaded
+                    downloaded_file = file_path
+                    break
 
-        if downloaded:
-            isdownload = True
+            if downloaded_file:
+                break
+            time.sleep(50)  # Check every 5 seconds
+
+        if downloaded_file:
             print(f"File downloaded successfully: {downloaded_file}")
-            return isdownload
         else:
             print("File download timed out or failed!")
 
     except Exception as e:
         print(f"Operation failed: {e}")
+    finally:
+        driver.quit()  # Ensure the driver is closed
 
 if __name__ == "__main__":
     download()
